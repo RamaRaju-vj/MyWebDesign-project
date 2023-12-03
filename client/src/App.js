@@ -7,9 +7,14 @@ import Login from "./pages/Login";
 import Profile from "./pages/Profile";
 import ProjectInfo from "./pages/ProjectInfo";
 import Register from "./pages/Register";
+import Info from './pages/HTMLContent/index';
+
+
+
  
 function App() {
   const { loading } = useSelector((state) => state.loaders);
+
   return (
     <div>
       {loading && <Spinner />}
@@ -41,6 +46,7 @@ function App() {
           />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/info" element={<Info />} />
         </Routes>
       </BrowserRouter>
     </div>
