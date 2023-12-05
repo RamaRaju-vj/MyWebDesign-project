@@ -15,6 +15,9 @@ app.use("/api/projects", projectsRoute);
 app.use("/api/tasks", tasksRoute);
 app.use("/api/notifications", notificationsRoute);
 
+app.use((req, res) => {
+  res.status(404).send('<h1>404 Not Found</h1><p>The requested URL ' + req.originalUrl + ' was not found on this server.</p>');
+});
 // deployment config
 const path = require("path");
 __dirname = path.resolve();
