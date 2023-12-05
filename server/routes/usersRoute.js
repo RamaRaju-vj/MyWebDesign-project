@@ -5,22 +5,63 @@ const jwt = require("jsonwebtoken");
 const authMiddleware = require("../middlewares/authMiddleware");
 
 // register a new user
+// router.post("/register", async (req, res) => {
+//   try {
+//     // check if the user already exists
+//     const userExists = await User.findOne({ email: req.body.email });
+//     if (userExists) {
+//       throw new Error("User already exists");
+//     }
+
+//     // hash the password
+//     const salt = await bcrypt.genSalt(10);
+//     const hashedPassword = await bcrypt.hash(req.body.password, salt);
+//     req.body.password = hashedPassword;
+
+//     // save the user
+//     const user = new User(req.body);
+//     await user.save();
+//     res.send({
+//       success: true,
+//       message: "User registered successfully",
+//     });
+//   } catch (error) {
+//     res.send({
+//       success: false,
+//       message: error.message,
+//     });
+//   }
+// });
+
+const validator = require('validator');
+
 router.post("/register", async (req, res) => {
   try {
-    // check if the user already exists
+    // Validate email
+    if (!validator.isEmail(req.body.email) || !req.body.email.endsWith('@northeastern.edu')) {
+      throw new Error("Invalid email address. Must be a valid Northeastern University email address.");
+    }
+
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/;
+    if (!passwordRegex.test(req.body.password)) {
+      throw new Error("Invalid password. Password must meet the criteria.");
+    }
+
+    // Check if the user already exists
     const userExists = await User.findOne({ email: req.body.email });
     if (userExists) {
       throw new Error("User already exists");
     }
 
-    // hash the password
+    // Hash the password
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(req.body.password, salt);
     req.body.password = hashedPassword;
 
-    // save the user
+    // Save the user
     const user = new User(req.body);
     await user.save();
+    
     res.send({
       success: true,
       message: "User registered successfully",
@@ -32,6 +73,7 @@ router.post("/register", async (req, res) => {
     });
   }
 });
+
 
 // login a user
 router.post("/login", async (req, res) => {
